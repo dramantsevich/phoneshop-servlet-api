@@ -30,9 +30,8 @@ public class ArrayListProductDaoTest
     @Test
     public void testSaveNewProduct() throws ProductNotFoundException {
         Product product = createProduct();
-
-        assertTrue(product.getId() > 0);
         Product result = productDao.findEntityById(product.getId());
+
         assertNotNull(result);
         assertEquals("test-product", result.getCode());
     }
@@ -40,9 +39,8 @@ public class ArrayListProductDaoTest
     @Test
     public void testFindProductWithZeroStock() throws ProductNotFoundException {
         Product product = createProduct();
-
-        assertNotNull(product.getId());
         Product result = productDao.findEntityById(product.getId());
+
         assertNotNull(result);
         assertEquals(0, product.getStock());
     }
@@ -51,9 +49,9 @@ public class ArrayListProductDaoTest
     public void testDeleteProduct() {
         Product product = createProduct();
 
-        assertNotNull(product.getId());
         productDao.delete(product);
         List<Product> productList = productDao.findAll();
+
         assertFalse(productList.contains(product));
     }
 
@@ -61,9 +59,9 @@ public class ArrayListProductDaoTest
     public void testDeleteProductById() throws ProductNotFoundException {
         Product product = createProduct();
 
-        assertNotNull(product.getId());
         productDao.deleteById(product.getId());
         List<Product> productList = productDao.findAll();
+
         assertFalse(productList.contains(product));
     }
 
@@ -71,6 +69,8 @@ public class ArrayListProductDaoTest
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-product", "Samsung Galaxy S", new BigDecimal(100), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
         productDao.create(product);
+
+        assertNotNull(product.getId());
 
         return product;
     }
