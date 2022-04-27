@@ -1,10 +1,7 @@
 package com.es.phoneshop.model.product;
 
-import java.util.List;
+import com.es.phoneshop.model.BaseDao;
 
-public interface ProductDao {
-    Product getProduct(Long id);
-    List<Product> findProducts();
-    void save(Product product);
-    void delete(Long id);
+public interface ProductDao extends BaseDao<Long, Product> {
+
 }
