@@ -17,5 +17,8 @@
   <main>
     <jsp:doBody/>
   </main>
+  <p>
+    (c) Dzmitry Ramantsevich by Expert-Soft
+  </p>
 </body>
 </html>
