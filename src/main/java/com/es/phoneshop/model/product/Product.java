@@ -4,6 +4,7 @@ import com.es.phoneshop.model.Entity;
 
 import java.math.BigDecimal;
 import java.util.Currency;
+import java.util.List;
 
 public class Product  extends Entity {
     private Long id;
@@ -15,6 +16,7 @@ public class Product  extends Entity {
     private Currency currency;
     private int stock;
     private String imageUrl;
+    private List<PriceHistory> priceHistory;
 
     public Product() {
     }
@@ -26,6 +28,16 @@ public class Product  extends Entity {
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
+    }
+
+    public Product(String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl, List<PriceHistory> priceHistory) {
+        this.code = code;
+        this.description = description;
+        this.price = price;
+        this.currency = currency;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+        this.priceHistory = priceHistory;
     }
 
     public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl) {
@@ -93,6 +105,10 @@ public class Product  extends Entity {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public List<PriceHistory> getPriceHistory() { return  priceHistory; }
+
+    public void setPriceHistory(List<PriceHistory>  priceHistory) { this. priceHistory =  priceHistory; }
 
     @Override
     public boolean equals(Object o) {
