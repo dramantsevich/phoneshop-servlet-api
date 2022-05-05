@@ -5,8 +5,8 @@ import com.es.phoneshop.model.product.ProductNotFoundException;
 import java.util.List;
 
 public interface BaseDao <K, T extends Entity>{
-    T findEntityById(K id) throws ProductNotFoundException;
-    List<T> findAll();
+    T findProductById(K id) throws ProductNotFoundException;
+    List<T> findAllProducts();
     void delete(T t);
     void deleteById(K id) throws ProductNotFoundException;
     void create(T t);

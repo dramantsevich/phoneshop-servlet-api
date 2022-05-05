@@ -29,13 +29,13 @@ public class ArrayListProductDaoTest
 
     @Test
     public void testFindProductsNoResults() {
-        assertTrue(productDao.findAll().isEmpty());
+        assertTrue(productDao.findAllProducts().isEmpty());
     }
 
     @Test
     public void testSaveNewProduct() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.findEntityById(product.getId());
+        Product result = productDao.findProductById(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(result.getCode()).isEqualTo("test-product");
@@ -44,7 +44,7 @@ public class ArrayListProductDaoTest
     @Test
     public void testFindProductWithZeroStock() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.findEntityById(product.getId());
+        Product result = productDao.findProductById(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(product.getStock()).isZero();
@@ -55,7 +55,7 @@ public class ArrayListProductDaoTest
         Product product = createProduct();
 
         productDao.delete(product);
-        List<Product> productList = productDao.findAll();
+        List<Product> productList = productDao.findAllProducts();
 
         assertThat(productList).isNotNull()
                 .doesNotContain(product);
@@ -66,7 +66,7 @@ public class ArrayListProductDaoTest
         Product product = createProduct();
 
         productDao.deleteById(product.getId());
-        List<Product> productList = productDao.findAll();
+        List<Product> productList = productDao.findAllProducts();
 
         assertThat(productList).isNotNull()
                 .doesNotContain(product);
@@ -84,7 +84,7 @@ public class ArrayListProductDaoTest
     public void testFindAscDescriptionSortedProducts() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SortField sortField = SortField.description;
         SortOrder sortOrder = SortOrder.asc;
-        List<Product> productSortedList = productDao.findAll();
+        List<Product> productSortedList = productDao.findAllProducts();
         Method sortComparator = ArrayListProductDao.class.getDeclaredMethod("sortComparator", SortField.class);
 
         sortComparator.setAccessible(true);
@@ -101,7 +101,7 @@ public class ArrayListProductDaoTest
     public void testFindDescPriceSortedProducts() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         SortField sortField = SortField.price;
         SortOrder sortOrder = SortOrder.desc;
-        List<Product> productSortedList = productDao.findAll();
+        List<Product> productSortedList = productDao.findAllProducts();
         Method sortComparator = ArrayListProductDao.class.getDeclaredMethod("sortComparator", SortField.class);
 
         sortComparator.setAccessible(true);

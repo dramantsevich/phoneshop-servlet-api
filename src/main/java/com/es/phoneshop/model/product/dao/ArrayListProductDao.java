@@ -76,7 +76,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findAll() {
+    public synchronized List<Product> findAllProducts() {
         return products.stream()
                 .filter(p -> p.getPrice() != null)
                 .filter(this::productIsInStock)
@@ -88,7 +88,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized Product findEntityById(Long id) throws ProductNotFoundException {
+    public synchronized Product findProductById(Long id) throws ProductNotFoundException {
         return products.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
