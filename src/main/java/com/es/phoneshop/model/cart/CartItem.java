@@ -1,8 +1,9 @@
 package com.es.phoneshop.model.cart;
 
+import com.es.phoneshop.model.Entity;
 import com.es.phoneshop.model.product.Product;
 
-public class CartItem {
+public class CartItem extends Entity {
     private Product product;
     private int quantity;
 

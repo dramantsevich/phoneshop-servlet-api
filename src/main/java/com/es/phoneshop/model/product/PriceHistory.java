@@ -1,8 +1,10 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.Entity;
+
 import java.math.BigDecimal;
 
-public class PriceHistory {
+public class PriceHistory extends Entity {
     private String startDate;
     private BigDecimal price;
 

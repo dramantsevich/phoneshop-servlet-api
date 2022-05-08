@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 
-public class Product  extends Entity {
+public class Product extends Entity {
     private Long id;
     private String code;
     private String description;
