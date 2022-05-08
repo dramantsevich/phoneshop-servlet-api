@@ -27,7 +27,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findProducts(String query) {
+    public synchronized List<Product> findProducts(String query) {
         Set<Product> productList = new HashSet<>();
         String [] queryArray = query.toLowerCase().split(" ");
 
@@ -48,7 +48,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder) {
+    public synchronized List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder) {
         Comparator<Product> comparator = sortComparator(sortField);
         if(SortOrder.asc == sortOrder) {
             return products.stream()
@@ -119,6 +119,23 @@ public class ArrayListProductDao implements ProductDao {
             product.setId(maxId++);
             products.add(product);
         }
+    }
+
+    @Override
+    public synchronized List<Product> findRecentlyViewedProducts(Deque<Long> recentlyViewedProductsId) {
+        Set<Product> productList = new HashSet<>();
+
+        for(Product product : products) {
+            Long productId = product.getId();
+
+            for(Long productViewedId : recentlyViewedProductsId) {
+                if(productId.equals(productViewedId)) {
+                    productList.add(product);
+                }
+            }
+        }
+
+        return new ArrayList<>(productList);
     }
 
 }
