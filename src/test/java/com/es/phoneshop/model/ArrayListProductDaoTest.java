@@ -10,9 +10,7 @@ import org.junit.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.Currency;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -112,6 +110,37 @@ public class ArrayListProductDaoTest
                 .collect(Collectors.toList());
 
         assertThat(productDao.findSortedProducts(sortField, sortOrder)).isEqualTo(productSortedList);
+    }
+
+    @Test
+    public void testFindRecentlyViewedProducts() {
+        Deque<Long> recentlyViewedProductsId = new ArrayDeque<>();
+        int[] productsId = {0, 4, 6, 8, 9};
+
+        for(int i : productsId) {
+            recentlyViewedProductsId = addRecentlyViewedProducts((long) i);
+        }
+
+        List<Product> productsList = productDao.findRecentlyViewedProducts(recentlyViewedProductsId);
+
+        for(Product product : productsList) {
+            for(Long id : recentlyViewedProductsId) {
+                assertThat(product.getId()).isEqualTo(id);
+            }
+        }
+    }
+
+    private Deque<Long> addRecentlyViewedProducts(Long productId) {
+        Deque<Long> recentlyViewedProductsId = new ArrayDeque<>();
+
+        if(recentlyViewedProductsId.size() < 3) {
+            recentlyViewedProductsId.add(productId);
+        } else {
+            recentlyViewedProductsId.removeFirst();
+            recentlyViewedProductsId.addLast(productId);
+        }
+
+        return recentlyViewedProductsId;
     }
 
     private Product createProduct() {
