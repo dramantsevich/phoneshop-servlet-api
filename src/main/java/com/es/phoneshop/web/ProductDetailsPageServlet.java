@@ -4,6 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
+import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.dao.ProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
@@ -41,11 +42,26 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         recentlyViewedProductsId = addRecentlyViewedProducts(productId);
 
-        request.setAttribute("product", productDao.findProductById(productId));
+        request.setAttribute("product", getProductIfExist(request, response));
         request.setAttribute("cart", cartService.getCart(request));
         request.setAttribute("viewedProducts", productDao.findRecentlyViewedProducts(recentlyViewedProductsId));
 
         request.getRequestDispatcher("/WEB-INF/pages/product.jsp").forward(request, response);
+    }
+
+    private Product getProductIfExist(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String productInfo = "";
+        Product product = null;
+
+        try{
+            productInfo = request.getPathInfo().substring(1);
+            Long id = Long.valueOf(productInfo);
+            product = productDao.findProductById(id);
+        } catch (ProductNotFoundException | NumberFormatException e) {
+            request.setAttribute("message", "Product " + productInfo + " not found");
+            response.sendError(404);
+        }
+        return product;
     }
 
     private Deque<Long> addRecentlyViewedProducts(Long productId) {
