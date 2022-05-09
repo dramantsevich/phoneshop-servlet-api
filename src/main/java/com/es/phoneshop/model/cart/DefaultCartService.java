@@ -76,6 +76,13 @@ public class DefaultCartService implements CartService {
         }
     }
 
+    @Override
+    public synchronized void delete(Cart cart, Long productId) {
+        cart.getItems().removeIf(item ->
+                productId.equals(item.getProduct().getId())
+        );
+    }
+
     private Optional<CartItem> findCartItemForUpdate(Cart cart, Long productId, int quantity) throws OutOfStockException {
         if(quantity <= 0) {
             throw new OutOfStockException(null, quantity, 0);
