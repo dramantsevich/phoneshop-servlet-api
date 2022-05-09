@@ -5,9 +5,10 @@ import com.es.phoneshop.model.product.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.dao.ProductDao;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class DefaultCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
@@ -55,6 +56,9 @@ public class DefaultCartService implements CartService {
         } else {
             cartList.add(cartItem);
         }
+
+        recalculateCartQuantity(cart);
+        recalculateCartTotalCost(cart);
     }
 
     @Override
@@ -74,6 +78,9 @@ public class DefaultCartService implements CartService {
         } else {
             cartList.add(cartItem);
         }
+
+        recalculateCartQuantity(cart);
+        recalculateCartTotalCost(cart);
     }
 
     @Override
@@ -81,6 +88,26 @@ public class DefaultCartService implements CartService {
         cart.getItems().removeIf(item ->
                 productId.equals(item.getProduct().getId())
         );
+
+        recalculateCartQuantity(cart);
+        recalculateCartTotalCost(cart);
+    }
+
+    private void recalculateCartQuantity(Cart cart) {
+        cart.setTotalQuantity(cart.getItems().stream()
+                .map(CartItem::getQuantity)
+                .collect(Collectors.summingInt(q -> q.intValue()))
+        );
+    }
+
+    private void recalculateCartTotalCost(Cart cart) {
+        BigDecimal totalCost = BigDecimal.ZERO;
+
+        for(CartItem item : cart.getItems()) {
+            totalCost = totalCost.add(item.getProduct().getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
+        }
+
+        cart.setTotalCost(totalCost);
     }
 
     private Optional<CartItem> findCartItemForUpdate(Cart cart, Long productId, int quantity) throws OutOfStockException {

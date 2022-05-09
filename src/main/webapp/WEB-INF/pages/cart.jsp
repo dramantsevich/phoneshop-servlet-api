@@ -6,7 +6,7 @@
 <jsp:useBean id="cart" type="com.es.phoneshop.model.cart.Cart" scope="request"/>
 <tags:master pageTitle="Cart Details">
   <p>
-      Cart: ${cart}
+      Cart: ${cart}, total quantity: ${cart.totalQuantity}
   </p>
   <c:if test="${not empty param.message}">
     <div class="success">
@@ -70,6 +70,12 @@
             </td>
           </tr>
         </c:forEach>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>Total cost</td>
+            <td>${cart.totalCost}</td>
+        </tr>
       </table>
       <p>
         <button>Update</button>
