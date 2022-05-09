@@ -4,10 +4,7 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
-import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
-import com.es.phoneshop.model.product.dao.ArrayListProductDao;
-import com.es.phoneshop.model.product.dao.ProductDao;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -22,14 +19,12 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CartPageServlet extends HttpServlet {
-    private ProductDao productDao;
     private CartService cartService;
 
     @Override
     public void init(ServletConfig config) throws  ServletException{
         super.init(config);
         try {
-            productDao = ArrayListProductDao.getInstance();
             cartService = DefaultCartService.getInstance();
         } catch (ProductNotFoundException e) {
             e.printStackTrace();
@@ -38,7 +33,7 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       setAttributes(request);
+        request.setAttribute("cart", cartService.getCart(request));
 
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
@@ -67,7 +62,7 @@ public class CartPageServlet extends HttpServlet {
         if (errors.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");
         } else {
-            request.setAttribute("errors", errors);
+            request.setAttribute("cart", cartService.getCart(request));
             doGet(request, response);
         }
     }
@@ -82,10 +77,6 @@ public class CartPageServlet extends HttpServlet {
                 errors.put(productId, "Out of stock, max available " + ((OutOfStockException) e).getStockAvailable());
             }
         }
-    }
-
-    private void setAttributes(HttpServletRequest request){
-        request.setAttribute("cart", cartService.getCart(request));
     }
 
     private int getQuantity(String quantityString, HttpServletRequest request) throws ParseException {
