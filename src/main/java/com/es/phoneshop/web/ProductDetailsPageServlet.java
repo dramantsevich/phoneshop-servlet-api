@@ -65,7 +65,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         String quantityString = request.getParameter("quantity");
 
         int quantity;
-        try{
+        try {
             NumberFormat format = NumberFormat.getInstance(request.getLocale());
             quantity = format.parse(quantityString).intValue();
         } catch (ParseException ex) {
@@ -78,8 +78,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try {
             cartService.add(cart, productId, quantity);
         } catch (OutOfStockException e) {
-            request.setAttribute("error", "Out of stock, available " + e.getStockAvailable());
-            doGet(request, response);
+            handleError(request, response, e);
             return;
         }
 
@@ -89,5 +88,19 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private Long parseProductId(HttpServletRequest request) {
         String productInfo = request.getPathInfo().substring(1);
         return Long.valueOf(productInfo);
+    }
+
+    private void handleError(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException, ServletException {
+        if(e.getClass().equals(ParseException.class)) {
+            request.setAttribute("error", "Not a number");
+        } else {
+            if(((OutOfStockException) e).getStockRequested() <= 0) {
+                request.setAttribute("error", "Can't be negative or zero");
+            } else {
+                request.setAttribute("error", "Out of stock, max available " + ((OutOfStockException) e).getStockAvailable());
+            }
+        }
+
+        doGet(request, response);
     }
 }

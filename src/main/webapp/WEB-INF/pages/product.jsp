@@ -21,7 +21,7 @@
 <p>
     ${product.description}
 </p>
-  <form method="post">
+  <form method="post" action="${pageContext.servletContext.contextPath}/products/${product.id}">
       <table>
           <tr>
             <td>Image</td>
@@ -71,7 +71,7 @@
         <c:forEach var="product" items="${viewedProducts}">
             <tr>
                 <td>
-                    <img src="${product.imageUrl}">
+                    <img class="viewed" src="${product.imageUrl}">
                 </td>
             </tr>
             <tr>
