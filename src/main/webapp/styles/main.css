@@ -33,6 +33,9 @@ img.product-tile {
 .success {
     color: green
 }
+.viewed {
+    max-width: 110px;
+}
 
 /* Page specific styles */
 body.product-list {
