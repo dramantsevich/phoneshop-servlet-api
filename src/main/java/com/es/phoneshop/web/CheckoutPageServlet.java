@@ -69,7 +69,7 @@ public class CheckoutPageServlet extends HttpServlet {
                              Order order) throws IOException, ServletException {
         if(errors.isEmpty()) {
             orderService.placeOrder(order);
-            response.sendRedirect(request.getContextPath() + "/overview/" + order.getId());
+            response.sendRedirect(request.getContextPath() + "/order/overview/" + order.getSecureId());
         } else {
             request.setAttribute("cart", cartService.getCart(request));
             request.setAttribute("errors", errors);
