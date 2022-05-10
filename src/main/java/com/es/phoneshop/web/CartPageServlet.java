@@ -62,7 +62,7 @@ public class CartPageServlet extends HttpServlet {
         if (errors.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart?message=Cart updated successfully");
         } else {
-            request.setAttribute("cart", cartService.getCart(request));
+            request.setAttribute("errors", errors);
             doGet(request, response);
         }
     }

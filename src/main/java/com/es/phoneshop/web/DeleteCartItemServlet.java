@@ -26,7 +26,7 @@ public class DeleteCartItemServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String productId = request.getPathInfo().substring(1);
 
         Cart cart = cartService.getCart(request);
