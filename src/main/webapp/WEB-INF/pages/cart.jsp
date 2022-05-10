@@ -71,8 +71,8 @@
           </tr>
         </c:forEach>
         <tr>
-            <td></td>
-            <td></td>
+            <td>Total Quantity</td>
+            <td>${cart.totalQuantity}</td>
             <td>Total cost</td>
             <td>${cart.totalCost}</td>
         </tr>
@@ -80,6 +80,9 @@
       <p>
         <button>Update</button>
       </p>
+  </form>
+  <form action="${pageContext.servletContext.contextPath}/checkout">
+        <button>Checkout</button>
   </form>
   <form id="deleteCartItem" method="post">
   </form>
