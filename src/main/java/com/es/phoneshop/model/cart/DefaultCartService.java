@@ -38,6 +38,15 @@ public class DefaultCartService implements CartService {
     }
 
     @Override
+    public synchronized void clearCart(Cart cart) {
+        List<CartItem> cartList = cart.getItems();
+
+        cartList.removeIf(cartItem -> cartItem.getQuantity() > 0);
+        cart.setTotalCost(new BigDecimal(0));
+        cart.setTotalQuantity(0);
+    }
+
+    @Override
     public synchronized void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
         List<CartItem> cartList = cart.getItems();
         Product product = productDao.getItemById(productId);

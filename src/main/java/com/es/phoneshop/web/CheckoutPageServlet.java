@@ -3,7 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.DefaultCartService;
-import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.order.DefaultOrderService;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.OrderService;
@@ -16,12 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -67,11 +63,14 @@ public class CheckoutPageServlet extends HttpServlet {
 
     private void handleError(HttpServletRequest request, HttpServletResponse response, Map<String, String> errors,
                              Order order) throws IOException, ServletException {
+        Cart cart = cartService.getCart(request);
+
         if(errors.isEmpty()) {
             orderService.placeOrder(order);
+            cartService.clearCart(cart);
             response.sendRedirect(request.getContextPath() + "/order/overview/" + order.getSecureId());
         } else {
-            request.setAttribute("cart", cartService.getCart(request));
+            request.setAttribute("cart", cart);
             request.setAttribute("errors", errors);
             request.setAttribute("order", order);
             request.setAttribute("paymentMethods", orderService.getPaymentMethod());
