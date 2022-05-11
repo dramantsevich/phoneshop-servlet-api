@@ -1,11 +1,12 @@
 package com.es.phoneshop.model.order.dao;
 
+import com.es.phoneshop.model.GenericDao;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.OrderNotFoundException;
 
 import java.util.*;
 
-public class ArrayListOrderDao implements OrderDao {
+public class ArrayListOrderDao extends GenericDao<Order, String> {
     private long orderId;
     private List<Order> orderList;
 
@@ -23,31 +24,34 @@ public class ArrayListOrderDao implements OrderDao {
     }
 
     @Override
-    public synchronized Order getOrder(Long id) throws OrderNotFoundException {
+    public synchronized Order getItem(String id) {
+        Long longId = Long.valueOf(id);
+
         return orderList.stream()
-                .filter(o -> id.equals(o.getId()))
+                .filter(o -> longId.equals(o.getId()))
                 .findAny()
                 .orElseThrow(OrderNotFoundException::new);
     }
 
     @Override
-    public Order getOrderBySecureId(String secureId) throws OrderNotFoundException {
+    public synchronized Order getItemById(String id) {
         return orderList.stream()
-                .filter(o -> secureId.equals(o.getSecureId()))
+                .filter(o -> id.equals(o.getSecureId()))
                 .findAny()
                 .orElseThrow(OrderNotFoundException::new);
     }
 
     @Override
-    public synchronized void save(Order order) throws OrderNotFoundException {
-        Long id = order.getId();
+    public synchronized void save(Order item) {
+        Long longId = item.getId();
 
-        if(id != null) {
-            orderList.remove(getOrder(id));
-            orderList.add(order);
+        if(longId != null) {
+            String id = item.getId().toString();
+            orderList.remove(getItem(id));
+            orderList.add(item);
         } else {
-            order.setId(++orderId);
-            orderList.add(order);
+            item.setId(++orderId);
+            orderList.add(item);
         }
     }
 }

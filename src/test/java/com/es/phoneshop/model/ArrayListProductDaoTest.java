@@ -2,7 +2,6 @@ package com.es.phoneshop.model;
 
 import com.es.phoneshop.model.product.dao.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.dao.ProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +17,7 @@ import static org.assertj.core.api.Assertions.*;
 
 public class ArrayListProductDaoTest
 {
-    private ProductDao productDao;
+    private ArrayListProductDao productDao;
 
     @Before
     public void setup() throws ProductNotFoundException {
@@ -33,7 +32,7 @@ public class ArrayListProductDaoTest
     @Test
     public void testSaveNewProduct() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.findProductById(product.getId());
+        Product result = productDao.getItemById(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(result.getCode()).isEqualTo("test-product");
@@ -42,7 +41,7 @@ public class ArrayListProductDaoTest
     @Test
     public void testFindProductWithZeroStock() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.findProductById(product.getId());
+        Product result = productDao.getItemById(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(product.getStock()).isZero();
@@ -146,7 +145,7 @@ public class ArrayListProductDaoTest
     private Product createProduct() {
         Currency usd = Currency.getInstance("USD");
         Product product = new Product("test-product", "Samsung Galaxy S", new BigDecimal(100), usd, 0, "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Samsung/Samsung%20Galaxy%20S.jpg");
-        productDao.create(product);
+        productDao.save(product);
 
         assertThat(product.getId()).isNotNull();
 

@@ -6,7 +6,6 @@ import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.dao.ArrayListProductDao;
-import com.es.phoneshop.model.product.dao.ProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.ServletConfig;
@@ -21,7 +20,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class ProductDetailsPageServlet extends HttpServlet {
-    private ProductDao productDao;
+    private ArrayListProductDao productDao;
     private CartService cartService;
     Deque<Long> recentlyViewedProductsId = new ArrayDeque<>();
 
@@ -56,7 +55,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try{
             productInfo = request.getPathInfo().substring(1);
             Long id = Long.valueOf(productInfo);
-            product = productDao.findProductById(id);
+            product = productDao.getItemById(id);
         } catch (ProductNotFoundException | NumberFormatException e) {
             request.setAttribute("message", "Product " + productInfo + " not found");
             response.sendError(404);

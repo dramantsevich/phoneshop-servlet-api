@@ -2,7 +2,6 @@ package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.dao.ArrayListProductDao;
-import com.es.phoneshop.model.product.dao.ProductDao;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class DefaultCartService implements CartService {
     private static final String CART_SESSION_ATTRIBUTE = DefaultCartService.class.getName() + ".cart";
-    private ProductDao productDao;
+    private ArrayListProductDao productDao;
 
     private DefaultCartService() {
         productDao = ArrayListProductDao.getInstance();
@@ -41,7 +40,7 @@ public class DefaultCartService implements CartService {
     @Override
     public synchronized void add(Cart cart, Long productId, int quantity) throws OutOfStockException {
         List<CartItem> cartList = cart.getItems();
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.getItemById(productId);
         CartItem cartItem = new CartItem(product, quantity);
 
         Optional<CartItem> optionalCartItem = findCartItemForUpdate(cart, productId, quantity);
@@ -64,7 +63,7 @@ public class DefaultCartService implements CartService {
     @Override
     public synchronized void update(Cart cart, Long productId, int quantity) throws OutOfStockException {
         List<CartItem> cartList = cart.getItems();
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.getItemById(productId);
         CartItem cartItem = new CartItem(product, quantity);
 
         Optional<CartItem> cartItemOptional = findCartItemForUpdate(cart, productId, quantity);
@@ -116,7 +115,7 @@ public class DefaultCartService implements CartService {
         }
 
         List<CartItem> cartList = cart.getItems();
-        Product product = productDao.findProductById(productId);
+        Product product = productDao.getItemById(productId);
         CartItem cartItem = new CartItem(product, quantity);
 
         return cartList.stream()

@@ -3,7 +3,6 @@ package com.es.phoneshop.model.order;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
-import com.es.phoneshop.model.order.dao.OrderDao;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -12,7 +11,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class DefaultOrderService implements OrderService{
-    private OrderDao orderDao = ArrayListOrderDao.getInstance();
+    private ArrayListOrderDao orderDao = ArrayListOrderDao.getInstance();
 
     private static class SingletonHelper {
         private static final DefaultOrderService INSTANCE = new DefaultOrderService();

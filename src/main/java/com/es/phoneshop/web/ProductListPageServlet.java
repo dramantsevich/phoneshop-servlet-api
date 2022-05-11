@@ -3,7 +3,6 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.SortField;
 import com.es.phoneshop.model.SortOrder;
 import com.es.phoneshop.model.product.dao.ArrayListProductDao;
-import com.es.phoneshop.model.product.dao.ProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.ServletConfig;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class ProductListPageServlet extends HttpServlet {
-    private ProductDao productDao;
+    private ArrayListProductDao productDao;
 
     @Override
     public void init(ServletConfig config) throws  ServletException{

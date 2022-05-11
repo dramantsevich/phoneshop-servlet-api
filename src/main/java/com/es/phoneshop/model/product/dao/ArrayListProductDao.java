@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.product.dao;
 
-
+import com.es.phoneshop.model.GenericDao;
 import com.es.phoneshop.model.SortField;
 import com.es.phoneshop.model.SortOrder;
 import com.es.phoneshop.model.product.Product;
@@ -9,10 +9,10 @@ import com.es.phoneshop.model.product.ProductNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao implements ProductDao {
-    private static ProductDao instance;
+public class ArrayListProductDao extends GenericDao<Product, Long> {
+    private static ArrayListProductDao instance;
 
-    public static synchronized ProductDao getInstance() throws ProductNotFoundException {
+    public static synchronized ArrayListProductDao getInstance() throws ProductNotFoundException {
         if(instance == null){
             instance = new ArrayListProductDao();
         }
@@ -26,7 +26,6 @@ public class ArrayListProductDao implements ProductDao {
         this.products = new ArrayList<>();
     }
 
-    @Override
     public synchronized List<Product> findProducts(String query) {
         Set<Product> productList = new HashSet<>();
         String [] queryArray = query.toLowerCase().split(" ");
@@ -47,7 +46,6 @@ public class ArrayListProductDao implements ProductDao {
         return new ArrayList<>(productList);
     }
 
-    @Override
     public synchronized List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder) {
         Comparator<Product> comparator = sortComparator(sortField);
         if(SortOrder.asc == sortOrder) {
@@ -75,7 +73,6 @@ public class ArrayListProductDao implements ProductDao {
         });
     }
 
-    @Override
     public synchronized List<Product> findAllProducts() {
         return products.stream()
                 .filter(p -> p.getPrice() != null)
@@ -88,7 +85,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized Product findProductById(Long id) throws ProductNotFoundException {
+    public Product getItemById(Long id) {
         return products.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
@@ -96,12 +93,43 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
+    public void save(Product item) {
+        if (item.getId() != null) {
+            products.set(item.getId().intValue(), item);
+        } else {
+            item.setId(maxId++);
+            products.add(item);
+        }
+    }
+
+    @Override
+    public Product getItem(Long id) {
+        return null;
+    }
+
+    //    @Override
+//    public synchronized Product findProductById(Long id) throws ProductNotFoundException {
+//        return products.stream()
+//                .filter(product -> id.equals(product.getId()))
+//                .findAny()
+//                .orElseThrow(ProductNotFoundException::new);
+//    }
+//
+//    @Override
+//    public synchronized void create(Product product) {
+//        if(product.getId() != null){
+//            products.set(product.getId().intValue(), product);
+//        }else{
+//            product.setId(maxId++);
+//            products.add(product);
+//        }
+//    }
+
     public synchronized void delete(Product product) {
         if(product != null)
             products.remove(product);
     }
 
-    @Override
     public synchronized void deleteById(Long id) throws ProductNotFoundException {
         if(id >= 0){
             products.remove(products.stream()
@@ -111,17 +139,6 @@ public class ArrayListProductDao implements ProductDao {
         }
     }
 
-    @Override
-    public synchronized void create(Product product) {
-        if(product.getId() != null){
-            products.set(product.getId().intValue(), product);
-        }else{
-            product.setId(maxId++);
-            products.add(product);
-        }
-    }
-
-    @Override
     public synchronized List<Product> findRecentlyViewedProducts(Deque<Long> recentlyViewedProductsId) {
         Set<Product> productList = new HashSet<>();
 
