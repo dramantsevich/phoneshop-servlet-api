@@ -1,8 +1,6 @@
-package com.es.phoneshop.model.order.dao;
+package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.model.GenericDao;
-import com.es.phoneshop.model.order.Order;
-import com.es.phoneshop.model.order.OrderNotFoundException;
 
 import java.util.*;
 
@@ -33,8 +31,7 @@ public class ArrayListOrderDao extends GenericDao<Order, String> {
                 .orElseThrow(OrderNotFoundException::new);
     }
 
-    @Override
-    public synchronized Order getItemById(String id) {
+    public synchronized Order getItemBySecureId(String id) {
         return orderList.stream()
                 .filter(o -> id.equals(o.getSecureId()))
                 .findAny()

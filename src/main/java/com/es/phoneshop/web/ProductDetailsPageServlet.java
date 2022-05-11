@@ -5,7 +5,7 @@ import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.DefaultCartService;
 import com.es.phoneshop.model.cart.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.dao.ArrayListProductDao;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.ServletConfig;
@@ -55,7 +55,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
         try{
             productInfo = request.getPathInfo().substring(1);
             Long id = Long.valueOf(productInfo);
-            product = productDao.getItemById(id);
+            product = productDao.getItem(id);
         } catch (ProductNotFoundException | NumberFormatException e) {
             request.setAttribute("message", "Product " + productInfo + " not found");
             response.sendError(404);

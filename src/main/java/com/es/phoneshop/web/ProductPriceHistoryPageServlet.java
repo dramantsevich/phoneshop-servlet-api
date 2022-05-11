@@ -1,7 +1,7 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ProductNotFoundException;
-import com.es.phoneshop.model.product.dao.ArrayListProductDao;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,7 +26,7 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String productId = request.getPathInfo();
-        request.setAttribute("product", productDao.getItemById(Long.valueOf(productId.substring(1))));
+        request.setAttribute("product", productDao.getItem(Long.valueOf(productId.substring(1))));
         request.getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp").forward(request, response);
     }
 }

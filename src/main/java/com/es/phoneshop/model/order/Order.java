@@ -20,6 +20,23 @@ public class Order extends Cart {
 
     private PaymentMethod paymentMethod;
 
+    public Order() {}
+
+    public Order(Long id, String secureId, BigDecimal subTotal, BigDecimal deliveryCost, String firstName,
+                 String lastName, String phone, LocalDate deliveryDate, String deliveryAddress,
+                 PaymentMethod paymentMethod) {
+        this.id = id;
+        this.secureId = secureId;
+        this.subTotal = subTotal;
+        this.deliveryCost = deliveryCost;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.deliveryDate = deliveryDate;
+        this.deliveryAddress = deliveryAddress;
+        this.paymentMethod = paymentMethod;
+    }
+
     public BigDecimal getSubTotal() {
         return subTotal;
     }

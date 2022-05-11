@@ -1,10 +1,8 @@
-package com.es.phoneshop.model.product.dao;
+package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.model.GenericDao;
 import com.es.phoneshop.model.SortField;
 import com.es.phoneshop.model.SortOrder;
-import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -85,7 +83,7 @@ public class ArrayListProductDao extends GenericDao<Product, Long> {
     }
 
     @Override
-    public Product getItemById(Long id) {
+    public Product getItem(Long id) {
         return products.stream()
                 .filter(product -> id.equals(product.getId()))
                 .findAny()
@@ -101,29 +99,6 @@ public class ArrayListProductDao extends GenericDao<Product, Long> {
             products.add(item);
         }
     }
-
-    @Override
-    public Product getItem(Long id) {
-        return null;
-    }
-
-    //    @Override
-//    public synchronized Product findProductById(Long id) throws ProductNotFoundException {
-//        return products.stream()
-//                .filter(product -> id.equals(product.getId()))
-//                .findAny()
-//                .orElseThrow(ProductNotFoundException::new);
-//    }
-//
-//    @Override
-//    public synchronized void create(Product product) {
-//        if(product.getId() != null){
-//            products.set(product.getId().intValue(), product);
-//        }else{
-//            product.setId(maxId++);
-//            products.add(product);
-//        }
-//    }
 
     public synchronized void delete(Product product) {
         if(product != null)

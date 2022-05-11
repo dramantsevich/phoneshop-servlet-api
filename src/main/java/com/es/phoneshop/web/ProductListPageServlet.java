@@ -2,7 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.SortField;
 import com.es.phoneshop.model.SortOrder;
-import com.es.phoneshop.model.product.dao.ArrayListProductDao;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 
 import javax.servlet.ServletConfig;
