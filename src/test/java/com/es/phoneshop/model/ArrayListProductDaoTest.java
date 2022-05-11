@@ -1,6 +1,6 @@
 package com.es.phoneshop.model;
 
-import com.es.phoneshop.model.product.dao.ArrayListProductDao;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductNotFoundException;
 import org.junit.Before;
@@ -32,7 +32,7 @@ public class ArrayListProductDaoTest
     @Test
     public void testSaveNewProduct() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.getItemById(product.getId());
+        Product result = productDao.getItem(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(result.getCode()).isEqualTo("test-product");
@@ -41,7 +41,7 @@ public class ArrayListProductDaoTest
     @Test
     public void testFindProductWithZeroStock() throws ProductNotFoundException {
         Product product = createProduct();
-        Product result = productDao.getItemById(product.getId());
+        Product result = productDao.getItem(product.getId());
 
         assertThat(result).isNotNull();
         assertThat(product.getStock()).isZero();
