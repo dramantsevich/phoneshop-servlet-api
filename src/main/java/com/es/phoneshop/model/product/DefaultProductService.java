@@ -18,7 +18,7 @@ public class DefaultProductService {
         return INSTANCE;
     }
 
-    protected Comparator<Product> getComparator(String query, SortField sortField, SortOrder sortOrder) {
+    public Comparator<Product> getComparator(String query, SortField sortField, SortOrder sortOrder) {
         Comparator<Product> comparator;
 
         if (sortField == SortField.DESCRIPTION) {
@@ -44,10 +44,5 @@ public class DefaultProductService {
                     .filter(product.getDescription()::contains)
                     .count();
         }
-    }
-
-    public Long parseProductId(HttpServletRequest request) {
-        String productInfo = request.getPathInfo().substring(1);
-        return Long.valueOf(productInfo);
     }
 }

@@ -16,14 +16,12 @@ import java.text.ParseException;
 public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartDao cartDao;
-    private DefaultProductService productService;
     private DefaultViewHistoryService viewHistoryService;
 
     @Override
     public void init(ServletConfig config) {
         productDao = ArrayListProductDao.getInstance();
         cartDao = ArrayListCartDao.getInstance();
-        productService = DefaultProductService.getInstance();
         viewHistoryService = DefaultViewHistoryService.getInstance();
     }
 
@@ -43,7 +41,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Long productId = productService.parseProductId(request);
+        Long productId = parseProductId(request);
         String quantityString = request.getParameter("quantity");
 
         int quantity;
@@ -72,11 +70,16 @@ public class ProductDetailsPageServlet extends HttpServlet {
         Product product = null;
 
         try{
-            Long id = productService.parseProductId(request);
+            Long id = parseProductId(request);
             product = productDao.getItem(id);
         } catch (ProductNotFoundException | NumberFormatException e) {
             HandleError.handleProductDetailError(request, response, e);
         }
         return product;
+    }
+
+    private Long parseProductId(HttpServletRequest request) {
+        String productInfo = request.getPathInfo().substring(1);
+        return Long.valueOf(productInfo);
     }
 }

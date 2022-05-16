@@ -49,4 +49,11 @@ public class ArrayListProductDao implements ProductDao {
                 .sorted(productService.getComparator(query, sortField, sortOrder))
                 .collect(Collectors.toList());
     }
+
+    public List<Product> getAllProducts() {
+        return products.stream()
+                .filter(p -> p.getPrice() != null)
+                .filter(p -> p.getStock() > 0)
+                .collect(Collectors.toList());
+    }
 }
