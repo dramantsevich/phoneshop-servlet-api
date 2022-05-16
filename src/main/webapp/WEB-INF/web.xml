@@ -81,7 +81,7 @@
 
   <servlet>
     <servlet-name>addProduct</servlet-name>
-    <servlet-class>com.es.phoneshop.web.AddProductToCartServlet</servlet-class>
+    <servlet-class>com.es.phoneshop.web.ProductListPageServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>

@@ -1,6 +1,6 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.model.product.ProductNotFoundException;
+import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 
 import javax.servlet.ServletConfig;
@@ -11,16 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ProductPriceHistoryPageServlet extends HttpServlet {
-    private ArrayListProductDao productDao;
+    private ProductDao productDao;
 
     @Override
-    public void init(ServletConfig config) throws  ServletException{
-        super.init(config);
-        try {
-            productDao = ArrayListProductDao.getInstance();
-        } catch (ProductNotFoundException e) {
-            e.printStackTrace();
-        }
+    public void init(ServletConfig config) {
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override

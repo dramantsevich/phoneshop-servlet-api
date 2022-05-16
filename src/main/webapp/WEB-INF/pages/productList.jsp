@@ -9,20 +9,20 @@
     Welcome to Expert-Soft training!
   </p>
   <c:if test="${not empty param.message}">
-      <div class="success">
-          ${param.message}
-      </div>
-    </c:if>
-    <c:if test="${not empty errors}">
-      <div class="error">
-          There were errors updating cart
-      </div>
-    </c:if>
+    <div class="success">
+        ${param.message}
+    </div>
+  </c:if>
+  <c:if test="${not empty errors}">
+    <div class="error">
+        There were errors updating cart
+    </div>
+  </c:if>
   <form>
     <input name="query" value=${param.query}>
     <button>Search</button>
   </form>
-  <form method="get" action="${pageContext.servletContext.contextPath}/products/addProduct/${product.id}">
+  <form method="post" action="${pageContext.servletContext.contextPath}/products/addProduct/*}">
       <table>
         <thead>
           <tr>
@@ -53,14 +53,14 @@
                     ${product.description}
                 </a>
             </td>
-            <td>
+            <td class="quantity">
                 <c:set var="error" value="${errors[product.id]}"/>
-                <input class="quantity" name="quantity">
+                <input class="quantity" name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 0}">
                 <c:if test="${not empty error}">
-                                    <div class="error">
-                                        ${errors[product.id]}
-                                    </div>
-                                </c:if>
+                    <div class="error">
+                        ${errors[product.id]}
+                    </div>
+                </c:if>
                 <input type="hidden" name="productId" value="${product.id}"/>
             </td>
             <td class="price">

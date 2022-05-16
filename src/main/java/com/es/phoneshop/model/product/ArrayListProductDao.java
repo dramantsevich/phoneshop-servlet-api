@@ -1,85 +1,25 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.model.GenericDao;
 import com.es.phoneshop.model.SortField;
 import com.es.phoneshop.model.SortOrder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ArrayListProductDao extends GenericDao<Product, Long> {
-    private static ArrayListProductDao instance;
-
-    public static synchronized ArrayListProductDao getInstance() throws ProductNotFoundException {
-        if(instance == null){
-            instance = new ArrayListProductDao();
-        }
-        return instance;
-    }
-
+public class ArrayListProductDao implements ProductDao {
+    private static final ArrayListProductDao INSTANCE = new ArrayListProductDao();
+    private final DefaultProductService productService;
     private long maxId;
-    private List<Product> products;
+    private final List<Product> products;
 
-    private ArrayListProductDao() throws ProductNotFoundException {
+    private ArrayListProductDao() {
         this.products = new ArrayList<>();
+        this.productService = DefaultProductService.getInstance();
     }
 
-    public synchronized List<Product> findProducts(String query) {
-        Set<Product> productList = new HashSet<>();
-        String [] queryArray = query.toLowerCase().split(" ");
-
-        for(Product product : products) {
-            String productDescription = product.getDescription().toLowerCase();
-            String [] productDescriptionArray = productDescription.split(" ");
-
-            for(String str : queryArray) {
-                for(String productDescriptionStr : productDescriptionArray) {
-                    if(productDescriptionStr.equals(str)) {
-                        productList.add(product);
-                    }
-                }
-            }
-        }
-
-        return new ArrayList<>(productList);
-    }
-
-    public synchronized List<Product> findSortedProducts(SortField sortField, SortOrder sortOrder) {
-        Comparator<Product> comparator = sortComparator(sortField);
-        if(SortOrder.asc == sortOrder) {
-            return products.stream()
-                    .filter(p -> p.getPrice() != null)
-                    .filter(this::productIsInStock)
-                    .sorted(comparator)
-                    .collect(Collectors.toList());
-        } else {
-            return products.stream()
-                    .filter(p -> p.getPrice() != null)
-                    .filter(this::productIsInStock)
-                    .sorted(comparator.reversed())
-                    .collect(Collectors.toList());
-        }
-    }
-
-    private static Comparator<Product> sortComparator(SortField sortField) {
-        return Comparator.comparing(product -> {
-            if(SortField.description == sortField){
-                return (Comparable) product.getDescription();
-            } else {
-                return (Comparable) product.getPrice();
-            }
-        });
-    }
-
-    public synchronized List<Product> findAllProducts() {
-        return products.stream()
-                .filter(p -> p.getPrice() != null)
-                .filter(this::productIsInStock)
-                .collect(Collectors.toList());
-    }
-
-    private boolean productIsInStock(Product product) {
-        return product.getStock() > 0;
+    public static ArrayListProductDao getInstance() {
+        return INSTANCE;
     }
 
     @Override
@@ -100,34 +40,13 @@ public class ArrayListProductDao extends GenericDao<Product, Long> {
         }
     }
 
-    public synchronized void delete(Product product) {
-        if(product != null)
-            products.remove(product);
+    @Override
+    public List<Product> getSortedProducts(String query, SortField sortField, SortOrder sortOrder) {
+        return products.stream()
+                .filter(p -> p.getPrice() != null)
+                .filter(p -> p.getStock() > 0)
+                .filter(p -> StringUtils.isBlank(query) || productService.countWordsAmount(query, p) > 0)
+                .sorted(productService.getComparator(query, sortField, sortOrder))
+                .collect(Collectors.toList());
     }
-
-    public synchronized void deleteById(Long id) throws ProductNotFoundException {
-        if(id >= 0){
-            products.remove(products.stream()
-                    .filter(p -> Objects.equals(p.getId(), id))
-                    .findAny()
-                    .orElseThrow(ProductNotFoundException::new));
-        }
-    }
-
-    public synchronized List<Product> findRecentlyViewedProducts(Deque<Long> recentlyViewedProductsId) {
-        Set<Product> productList = new HashSet<>();
-
-        for(Product product : products) {
-            Long productId = product.getId();
-
-            for(Long productViewedId : recentlyViewedProductsId) {
-                if(productId.equals(productViewedId)) {
-                    productList.add(product);
-                }
-            }
-        }
-
-        return new ArrayList<>(productList);
-    }
-
 }

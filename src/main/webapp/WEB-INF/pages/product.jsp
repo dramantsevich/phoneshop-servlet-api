@@ -5,9 +5,6 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product Details">
-<p>
-    Cart: ${cart}
-</p>
 <c:if test="${not empty param.message}">
     <div class="success">
         ${param.message}
@@ -68,22 +65,22 @@
   </form>
   <p>Recently viewed</p>
     <table>
-        <c:forEach var="product" items="${viewedProducts}">
+        <c:forEach var="viewHistory" items="${viewedProducts.items}">
             <tr>
                 <td>
-                    <img class="viewed" src="${product.imageUrl}">
+                    <img class="viewed" src="${viewHistory.imageUrl}">
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
-                        ${product.description}
+                    <a href="${pageContext.servletContext.contextPath}/products/${viewHistory.id}">
+                        ${viewHistory.description}
                     </a>
                 </td>
             </tr>
             <tr>
                 <td class="price">
-                    <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+                    <fmt:formatNumber value="${viewHistory.price}" type="currency" currencySymbol="${viewHistory.currency.symbol}"/>
                 </td>
             </tr>
         </c:forEach>
