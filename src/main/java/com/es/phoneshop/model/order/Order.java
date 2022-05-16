@@ -20,7 +20,8 @@ public class Order extends Cart {
 
     private PaymentMethod paymentMethod;
 
-    public Order() {}
+    public Order() {
+    }
 
     public Order(Long id, String secureId, BigDecimal subTotal, BigDecimal deliveryCost, String firstName,
                  String lastName, String phone, LocalDate deliveryDate, String deliveryAddress,

@@ -1,11 +1,13 @@
 package com.es.phoneshop.model.order;
 
+import com.es.phoneshop.model.GenericDao;
 import com.es.phoneshop.model.cart.Cart;
 
-import java.util.List;
 
-public interface OrderService {
+public interface OrderDao extends GenericDao<Order, Long> {
     Order getOrder(Cart cart);
-    List<PaymentMethod> getPaymentMethod();
+
+    Order getItemBySecureId(String id);
+
     void placeOrder(Order order);
 }
