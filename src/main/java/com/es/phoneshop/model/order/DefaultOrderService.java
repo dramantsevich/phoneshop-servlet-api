@@ -1,55 +1,62 @@
 package com.es.phoneshop.model.order;
 
-import com.es.phoneshop.model.cart.Cart;
-import com.es.phoneshop.model.cart.CartItem;
-
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.function.Consumer;
 
-public class DefaultOrderService implements OrderService{
-    private ArrayListOrderDao orderDao = ArrayListOrderDao.getInstance();
+public class DefaultOrderService {
+    private static final DefaultOrderService INSTANCE = new DefaultOrderService();
+    private final String errorMessage = "Value is required";
 
-    private static class SingletonHelper {
-        private static final DefaultOrderService INSTANCE = new DefaultOrderService();
+    private DefaultOrderService() {
     }
 
     public static DefaultOrderService getInstance() {
-        return DefaultOrderService.SingletonHelper.INSTANCE;
+        return INSTANCE;
     }
 
-    @Override
-    public Order getOrder(Cart cart) {
-        Order order = new Order();
-        order.setItems(cart.getItems().stream().map(item -> {
-                    try {
-                        return (CartItem) item.clone();
-                    } catch (CloneNotSupportedException e) {
-                        throw new RuntimeException(e);
-                    }
-        }).collect(Collectors.toList()));
-        order.setSubTotal(cart.getTotalCost());
-        order.setDeliveryCost(calculateDeliveryCost());
-        order.setTotalCost(order.getSubTotal().add(order.getDeliveryCost()));
-
-        return order;
+    protected BigDecimal calculateDeliveryCost() {
+        return new BigDecimal(5);
     }
 
-    @Override
     public List<PaymentMethod> getPaymentMethod() {
         return Arrays.asList(PaymentMethod.values());
     }
 
-    @Override
-    public void placeOrder(Order order) {
-        order.setSecureId(UUID.randomUUID().toString());
-        orderDao.save(order);
+    public void setRequiredParameter(HttpServletRequest request, String parameter, Map<String, String> errors, Consumer<String> consumer) {
+        String value = request.getParameter(parameter);
+
+        if (value == null || value.isEmpty()) {
+            errors.put(parameter, errorMessage);
+        } else {
+            consumer.accept(value);
+        }
     }
 
-    private BigDecimal calculateDeliveryCost() {
-        return new BigDecimal(5);
+    public void setDeliveryDate(HttpServletRequest request, Map<String, String> errors, Order order) {
+        String value = request.getParameter("deliveryDate");
+
+        if (value == null || value.isEmpty()) {
+            errors.put("deliveryDate", errorMessage);
+        } else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/dd/yyyy")
+                    .withLocale(request.getLocale());
+            order.setDeliveryDate(LocalDate.parse(value, formatter));
+        }
     }
 
+    public void setPaymentMethod(HttpServletRequest request, Map<String, String> errors, Order order) {
+        String value = request.getParameter("paymentMethod");
+
+        if (value == null || value.isEmpty()) {
+            errors.put("paymentMethod", errorMessage);
+        } else {
+            order.setPaymentMethod(PaymentMethod.valueOf(value));
+        }
+    }
 }

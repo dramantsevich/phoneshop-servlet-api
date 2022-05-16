@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 public class DemoDataServletContextListener implements ServletContextListener {
-    private ArrayListProductDao productDao;
+    private final ArrayListProductDao productDao;
 
     public DemoDataServletContextListener() throws ProductNotFoundException {
         this.productDao = ArrayListProductDao.getInstance();
@@ -26,7 +26,7 @@ public class DemoDataServletContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         boolean insertDemoData = Boolean.parseBoolean(event.getServletContext().getInitParameter("insertDemoData"));
 
-        if(insertDemoData){
+        if (insertDemoData) {
             saveSampleProducts();
         }
     }

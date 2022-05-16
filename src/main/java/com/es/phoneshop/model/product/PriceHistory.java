@@ -31,30 +31,4 @@ public class PriceHistory extends Entity {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        PriceHistory that = (PriceHistory) o;
-
-        if (!startDate.equals(that.startDate)) return false;
-        return price.equals(that.price);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = startDate.hashCode();
-        result = 31 * result + price.hashCode();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PriceHistory{" +
-                "startDate='" + startDate + '\'' +
-                ", price=" + price +
-                '}';
-    }
 }

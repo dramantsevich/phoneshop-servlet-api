@@ -4,12 +4,17 @@ import com.es.phoneshop.model.Entity;
 import com.es.phoneshop.model.product.Product;
 
 public class CartItem extends Entity {
-    private Product product;
+    private final Product product;
     private int quantity;
 
     public CartItem(Product product, int quantity) {
         this.product = product;
         this.quantity = quantity;
+    }
+
+    public CartItem(CartItem cartItem) {
+        this.product = cartItem.product;
+        this.quantity = cartItem.quantity;
     }
 
     public Product getProduct() {
@@ -22,15 +27,5 @@ public class CartItem extends Entity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
-
-    @Override
-    public String toString() {
-        return product.getCode() + ": " + quantity;
     }
 }
