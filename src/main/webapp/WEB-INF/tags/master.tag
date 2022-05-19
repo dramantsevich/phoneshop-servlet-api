@@ -13,9 +13,15 @@
       <img src="${pageContext.servletContext.contextPath}/images/logo.svg"/>
       PhoneShop
     </a>
+    <a href="${pageContext.servletContext.contextPath}/cart">
+        <jsp:include page="/cart/minicart"/>
+    </a>
   </header>
   <main>
     <jsp:doBody/>
   </main>
+  <p>
+    (c) Dzmitry Ramantsevich by Expert-Soft
+  </p>
 </body>
 </html>

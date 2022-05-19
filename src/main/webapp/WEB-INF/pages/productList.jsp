@@ -8,24 +8,73 @@
   <p>
     Welcome to Expert-Soft training!
   </p>
-  <table>
-    <thead>
-      <tr>
-        <td>Image</td>
-        <td>Description</td>
-        <td class="price">Price</td>
-      </tr>
-    </thead>
-    <c:forEach var="product" items="${products}">
-      <tr>
-        <td>
-          <img class="product-tile" src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
-        </td>
-        <td>${product.description}</td>
-        <td class="price">
-          <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
-        </td>
-      </tr>
-    </c:forEach>
-  </table>
+  <c:if test="${not empty param.message}">
+    <div class="success">
+        ${param.message}
+    </div>
+  </c:if>
+  <c:if test="${not empty errors}">
+    <div class="error">
+        There were errors updating cart
+    </div>
+  </c:if>
+  <form>
+    <input name="query" value=${param.query}>
+    <button>Search</button>
+  </form>
+  <form method="post" action="${pageContext.servletContext.contextPath}/products/addProduct/*}">
+      <table>
+        <thead>
+          <tr>
+            <td>Image</td>
+            <td>
+                Description
+                <tags:sortLink sort="description" order="asc"/>
+                <tags:sortLink sort="description" order="desc"/>
+            </td>
+            <td>
+                Quantity
+            </td>
+            <td class="price">
+                Price
+                <tags:sortLink sort="price" order="asc"/>
+                <tags:sortLink sort="price" order="desc"/>
+            </td>
+            <td></td>
+          </tr>
+        </thead>
+        <c:forEach var="product" items="${products}">
+          <tr>
+            <td>
+              <img class="product-tile" src="${product.imageUrl}">
+            </td>
+            <td>
+                <a href="${pageContext.servletContext.contextPath}/products/${product.id}">
+                    ${product.description}
+                </a>
+            </td>
+            <td class="quantity">
+                <c:set var="error" value="${errors[product.id]}"/>
+                <input class="quantity" name="quantity" value="${not empty error ? paramValues['quantity'][status.index] : 0}">
+                <c:if test="${not empty error}">
+                    <div class="error">
+                        ${errors[product.id]}
+                    </div>
+                </c:if>
+                <input type="hidden" name="productId" value="${product.id}"/>
+            </td>
+            <td class="price">
+              <a href="${pageContext.servletContext.contextPath}/productPriceHistory/${product.id}">
+                <fmt:formatNumber value="${product.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
+              </a>
+            </td>
+            <td>
+                <button>
+                    Add to cart
+                </button>
+            </td>
+          </tr>
+        </c:forEach>
+      </table>
+  </form>
 </tags:master>

@@ -1,7 +1,11 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.model.BaseDao;
+import com.es.phoneshop.model.GenericDao;
+import com.es.phoneshop.model.SortField;
+import com.es.phoneshop.model.SortOrder;
 
-public interface ProductDao extends BaseDao<Long, Product> {
+import java.util.List;
 
+public interface ProductDao extends GenericDao<Product, Long> {
+    List<Product> getSortedProducts(String query, SortField sortField, SortOrder sortOrder);
 }
